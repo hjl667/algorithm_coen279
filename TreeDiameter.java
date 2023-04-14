@@ -25,7 +25,8 @@ public class TreeDiameter {
         dfs(graph, 0, visited);
         return diameter;
     }
-
+    
+    //given a node, the longest path is the sum of the longest path to the right and the longet path to the left, to use left and right loosely.
     public int dfs(Map<Integer, List<Integer>> graph, int start, Set<Integer> visited){
         int distance1 = 0, distance2 = 0;
         visited.add(start);
