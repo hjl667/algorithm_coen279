@@ -1,5 +1,7 @@
 import java.util.*;
 
+//height of n-ary tree is a similar problem 
+
 public class TreeDiameter {
     private int diameter = 0;
     public int treeDiameter(int[][] edges) {
