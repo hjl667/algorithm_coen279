@@ -2,7 +2,7 @@ package sf;
 import java.util.*;
 
 public class unequal_elements {
-    public static int solution(int[] arr, int k){
+    public static int solution(int[] nums, int k){
         //dp[i][k] is the max length including num i having k adjacent different elements
         //this does not cover cases when the last element is not choosing
         //so we add an extra negative integer at the end of the array
@@ -13,13 +13,9 @@ public class unequal_elements {
         //                                               case02: find the nearest nums[j] == nums[i] to the left
         //                                                       dp[i][k] = dp[j][k] + 1
         //                                          dp[i][k] = Max(case01, case02)
-        k++;
-        int[] nums = new int[arr.length + 1];
-        nums[arr.length] = -1;
-        for(int i = 0; i < arr.length; i++) nums[i] = arr[i];
 
         int[][] dp = new int[nums.length][k+1];
-        dp[0][0] = 1;
+        for(int i = 0; i < nums.length; i++) dp[i][0] = 1;
         HashMap<Integer, Integer> map = new HashMap<>();
         map.put(nums[0], 0);
         for(int i = 1; i < nums.length; i++){
@@ -39,13 +35,13 @@ public class unequal_elements {
             map.put(nums[i],i);
         }
         int max = 0;
-        for(int i = 0; i <= k; i++) max = Math.max(max, dp[nums.length - 1][i]);
-        return max - 1;
+        for(int i = 0; i < dp.length; i++) max = Math.max(max, dp[i][k]);
+        return max;
     }
 
     public static void main(String[] args){
-        int[] arr = new int[] {1,1,2,3,2,1};
-        int res = solution(arr, 2);
+        int[] arr = new int[] {1,1,2,3,3,3,3,2,1};
+        int res = solution(arr, 1);
         System.out.println("longest length " + res);
     }
 }
