@@ -40,7 +40,7 @@ public class unequal_elements {
     }
 
     public static void main(String[] args){
-        int[] arr = new int[] {1,1,2,3,3,3,3,2,1};
+        int[] arr = new int[] {1,1,2,3,3,3,3,3,2,1};
         int res = solution(arr, 1);
         System.out.println("longest length " + res);
     }
