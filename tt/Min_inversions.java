@@ -5,42 +5,43 @@ import java.util.*;
 
 public class Min_inversions {
     private int max_bit;
-    //x_table[i][0]: number of inversion without flip
     private int[][] x_table;
 
-    public static int bs(TreeMap<Integer, Integer> tree, int target){
-        Integer ceilingKey = tree.ceilingKey(target);
+    public int findInversionPairs(List<int[]> left_list, List<int[]> right_list){
 
-        if(ceilingKey == null){
-            return 0;
+        int left = 0, right = 0, cnt = 0;
+        int l_size = left_list.size(), r_size = right_list.size();
+        while(left < l_size && right < r_size){
+            while(right_list.get(right)[0] > left_list.get(left)[0]){
+                left++;
+            }
+            cnt += (l_size - left);
+            right++;
         }
-        TreeMap<Integer, Integer> subMap = new TreeMap<>(tree.tailMap(ceilingKey));
-        return subMap.size();
+        return cnt;
+
     }
 
-    public void dfs(TreeMap<Integer, Integer> tree, int digit){
+    public void dfs(List<int[]> list, int digit){
         if(digit < 0) return;
-        TreeMap<Integer, Integer> left_tree = new TreeMap<>();
-        TreeMap<Integer, Integer> right_tree = new TreeMap<>();
-        for(Integer key : tree.keySet()){
-            int num = tree.get(key);
+        List<int[]> left_list = new ArrayList<>();
+        List<int[]> right_list = new ArrayList<>();
+        for(int i = 0; i < list.size(); i++){
+            int key = list.get(i)[0];
+            int num = list.get(i)[1];
             if(((1 << digit)&num) > 0){
-                right_tree.put(key, num);
+                right_list.add(new int[]{key, num});
             }else{
-                left_tree.put(key, num);
+                left_list.add(new int[]{key, num});
             }
         }
-        int total_pairs = left_tree.size()*right_tree.size();
-        int inversion_pairs = 0;
-        //for each index in the right_tree, find the number of index in the left tree smaller or equal to the index
-        //i.e. calculate the number inversion paris at the current segment
-        for(Integer key : right_tree.keySet()){
-            inversion_pairs += bs(left_tree, key);
-        }
+        int total_pairs = left_list.size()*right_list.size();
+        int inversion_pairs = findInversionPairs(left_list, right_list);
+
         x_table[digit][0] += inversion_pairs;
         x_table[digit][1] += (total_pairs - inversion_pairs);
-        dfs(left_tree, digit-1);
-        dfs(right_tree, digit-1);
+        dfs(left_list, digit-1);
+        dfs(right_list, digit-1);
 
     }
 
@@ -51,12 +52,16 @@ public class Min_inversions {
             max = Math.max(max, nums[i]);
             tree.put(i, nums[i]);
         }
+        List<int[]> list = new ArrayList<>();
+        for(Integer key: tree.keySet()){
+            list.add(new int[]{key, tree.get(key)});
+        }
         int msb = Integer.highestOneBit(max);
         while(((1 << this.max_bit)&msb) == 0){
             this.max_bit += 1;
         }
         x_table = new int[max_bit + 1][2];
-        dfs(tree, max_bit);
+        dfs(list, max_bit);
 
         int x = 0;
         for(int i = max_bit; i >= 0; i--){
